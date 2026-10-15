@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Roadmap 20 minggu menuju PKL: log jam, streak, timer fokus, gate per fase.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232c58cc'/%3E%3Cpath d='M9 8h11a3 3 0 0 1 3 3v13H12a3 3 0 0 1-3-3z' fill='%23fff'/%3E%3Cpath d='M13 13h6M13 17h6' stroke='%232c58cc' stroke-width='2'/%3E%3C/svg%3E">
+<title>Logbook Menuju PKL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: engineer's graph-paper logbook. Sticky tab bar, one column, data in mono. */
+:root{
+  --paper:#f6f8fc; --grid:#e3e9f4; --card:#ffffff; --ink:#14203a; --ink-2:#4b5875; --ink-3:#7a869f; --line:#cdd6e6;
+  --odin:#2c58cc; --odin-soft:#e4ebfb; --seo:#0d8466; --seo-soft:#dcf2ea;
+  --hi:#ffe27a; --hi-ink:#3b2d00; --warn:#b4410e; --warn-soft:#fdeadf; --ok:#15803d;
+  --p1:#2c58cc; --p2:#5b47c4; --p3:#b06d12; --p4:#c8341f; --p5:#0f766e;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0d1626; --grid:#16233a; --card:#111d31; --ink:#e5ebf7; --ink-2:#a3b2cc; --ink-3:#73829e; --line:#253553;
+  --odin:#86a8ff; --odin-soft:#1a2a4d; --seo:#4fd0a6; --seo-soft:#123a31;
+  --hi:#f2d34f; --hi-ink:#1b1400; --warn:#fb9a5c; --warn-soft:#3a1f12; --ok:#4ade80;
+  --p1:#86a8ff; --p2:#a798ff; --p3:#f0b458; --p4:#ff8a78; --p5:#5fd3c6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0d1626; --grid:#16233a; --card:#111d31; --ink:#e5ebf7; --ink-2:#a3b2cc; --ink-3:#73829e; --line:#253553;
+  --odin:#86a8ff; --odin-soft:#1a2a4d; --seo:#4fd0a6; --seo-soft:#123a31;
+  --hi:#f2d34f; --hi-ink:#1b1400; --warn:#fb9a5c; --warn-soft:#3a1f12; --ok:#4ade80;
+  --p1:#86a8ff; --p2:#a798ff; --p3:#f0b458; --p4:#ff8a78; --p5:#5fd3c6; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%}
+html{color-scheme:light}
+body{margin:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background-color:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;background-attachment:fixed}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:20px 64px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,6vw,42px);letter-spacing:-.01em}
+h2{font-size:22px}
+h3{font-size:17px}
+a{color:var(--odin)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.label{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+header.top{display:grid;gap:14px;padding-block:8px 18px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 16px;color:var(--ink-2);font-size:14px}
+.meta b{color:var(--ink)}
+.hl{background:var(--hi);color:var(--hi-ink);padding:0 6px;border-radius:2px;font-weight:600}
+.status{font-family:var(--f-mono);font-size:12px;color:var(--ink-3)}
+.banner{border:1px solid var(--line);background:var(--card);padding:10px 14px;border-radius:6px;font-size:14px}
+.banner.warn{border-color:var(--warn);background:var(--warn-soft);color:var(--ink)}
+.banner.warn b{color:var(--warn)}
+/* stats strip */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);background:var(--card);border-radius:6px}
+.stat{padding:12px 14px;display:grid;gap:2px;min-width:0}
+.stat+.stat{border-left:1px solid var(--line)}
+.stat .v{font-family:var(--f-mono);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat .v small{font-size:13px;color:var(--ink-3);font-weight:400}
+.meter{height:6px;background:var(--grid);border-radius:3px;overflow:hidden;margin-top:4px}
+.meter i{display:block;height:100%;background:var(--odin)}
+@media (max-width:640px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat:nth-child(3){border-left:0}.stat:nth-child(n+3){border-top:1px solid var(--line)}}
+/* tabs */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);display:flex;gap:4px;overflow-x:auto;
+  padding-block:10px;margin-block:18px 6px;border-bottom:1px solid var(--line)}
+nav.tabs button{font:600 14px var(--f-body);color:var(--ink-2);background:none;border:1px solid transparent;border-radius:4px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);background:var(--card);border-color:var(--line)}
+nav.tabs button:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--odin);outline-offset:2px}
+section.panel{display:grid;gap:18px;padding-top:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.two{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.daytag{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:3px;border:1px solid currentColor}
+.t-odin{color:var(--odin)} .t-seo{color:var(--seo)} .t-rev{color:var(--ink-2)}
+/* task lists */
+ul.tasks{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+ul.tasks li{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:8px;align-items:start;padding:6px 4px;border-radius:4px}
+ul.tasks li:hover{background:var(--paper)}
+ul.tasks input{width:17px;height:17px;margin:3px 0 0;accent-color:var(--odin)}
+ul.tasks.seo input{accent-color:var(--seo)}
+ul.tasks label{cursor:pointer}
+ul.tasks li.done label{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--ink-3)}
+ul.tasks a.src{font-family:var(--f-mono);font-size:12px;text-decoration:none;padding:2px 6px;border:1px solid var(--line);border-radius:3px;color:var(--ink-2);white-space:nowrap}
+ul.tasks a.src:hover{border-color:var(--odin);color:var(--odin)}
+code{font-family:var(--f-mono);font-size:.9em;background:var(--grid);padding:0 4px;border-radius:3px}
+/* log panel */
+.logrow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding-block:8px;border-bottom:1px dashed var(--line)}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{font:600 15px var(--f-mono);width:36px;height:32px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:4px;cursor:pointer}
+.stepper button:hover{border-color:var(--ink-2)}
+.stepper output{font-family:var(--f-mono);font-size:18px;font-weight:600;min-width:52px;text-align:center;font-variant-numeric:tabular-nums}
+.field{display:grid;gap:4px;margin-top:12px}
+.field label{font-size:13px;color:var(--ink-2);font-weight:500}
+input[type=date],textarea,select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:7px 9px;width:100%}
+textarea{min-height:64px;resize:vertical}
+.check{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:14px}
+.check input{width:17px;height:17px;margin-top:2px;accent-color:var(--ok)}
+.saved{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);min-height:16px}
+/* chart */
+.chart{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:4px;align-items:end;height:130px;padding-top:6px}
+.bar{position:relative;height:100%;display:flex;align-items:flex-end;justify-content:center}
+.bar .tgt{position:absolute;bottom:0;left:0;right:0;border:1px dashed var(--ink-3);border-bottom:0;border-radius:2px 2px 0 0}
+.bar .got{position:relative;width:70%;background:var(--odin);border-radius:2px 2px 0 0;min-height:0}
+.bar.now .got{background:var(--hi);outline:1px solid var(--hi-ink)}
+.bar.future .tgt{opacity:.45}
+.axis{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:4px;margin-top:4px}
+.axis span{font-family:var(--f-mono);font-size:10px;color:var(--ink-3);text-align:center;overflow:hidden}
+.axis span.m{color:var(--ink-2)}
+.modes{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:4px;margin-top:3px}
+.modes i{height:4px;border-radius:1px;background:transparent}
+.modes i.uas{background:var(--warn)} .modes i.libur{background:var(--ok)} .modes i.ramadan{background:var(--p5)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--ink-2);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:4px;display:inline-block;border-radius:1px}
+/* roadmap */
+.phase{display:grid;gap:8px}
+.phasehead{display:grid;grid-template-columns:6px minmax(0,1fr) auto;gap:12px;align-items:stretch;padding-block:6px}
+.phasehead .stripe{border-radius:2px}
+.phasehead p{margin:2px 0 0;color:var(--ink-2);font-size:14px}
+.phasehead .pct{font-family:var(--f-mono);font-size:13px;color:var(--ink-2);align-self:center;white-space:nowrap}
+details.week{background:var(--card);border:1px solid var(--line);border-radius:6px}
+details.week[open]{border-color:var(--ink-3)}
+details.week.current{box-shadow:inset 4px 0 0 var(--hi)}
+details.week summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 14px}
+details.week summary::-webkit-details-marker{display:none}
+.wk{font-family:var(--f-mono);font-weight:600;font-size:13px}
+.wtitle{font-weight:600;min-width:0}
+.wtitle small{display:block;font-weight:400;color:var(--ink-3);font-family:var(--f-mono);font-size:12px}
+.chip{font-family:var(--f-mono);font-size:11px;padding:2px 6px;border-radius:3px;border:1px solid var(--line);color:var(--ink-2);white-space:nowrap}
+.chip.uas{border-color:var(--warn);color:var(--warn)} .chip.libur{border-color:var(--ok);color:var(--ok)} .chip.ramadan{border-color:var(--p5);color:var(--p5)}
+.chip.now{background:var(--hi);color:var(--hi-ink);border-color:var(--hi)}
+.weekbody{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:4px 14px 14px;border-top:1px dashed var(--line)}
+@media (max-width:700px){.weekbody{grid-template-columns:minmax(0,1fr)}}
+.trackh{display:flex;justify-content:space-between;gap:8px;align-items:baseline;margin:10px 0 4px}
+.weeknote{grid-column:1/-1;font-size:13px;color:var(--ink-2);margin:0}
+.gate{border:1px solid var(--line);border-left:4px solid var(--ink);background:var(--card);border-radius:6px;padding:12px 14px}
+.gate h3{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+/* sources */
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+td.cat{font-family:var(--f-mono);font-size:12px;color:var(--ink-2);white-space:nowrap}
+/* rules */
+ol.rules{margin:0;padding-left:22px;display:grid;gap:10px;max-width:68ch}
+ol.rules li::marker{font-family:var(--f-mono);color:var(--ink-3)}
+.session{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--card)}
+.session div{padding:12px 14px}
+.session div+div{border-left:1px solid var(--line)}
+.session .mono{font-size:20px;font-weight:600}
+@media (max-width:560px){.session{grid-template-columns:minmax(0,1fr)}.session div+div{border-left:0;border-top:1px solid var(--line)}}
+.muted{color:var(--ink-2)}
+p{margin:0}
+.prose{display:grid;gap:10px;max-width:68ch}
+@media (prefers-reduced-motion:no-preference){.meter i,.bar .got{transition:height .3s ease,width .3s ease}}
+/* buttons */
+.btn{font:600 14px var(--f-body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:8px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--ink-2)}
+.btn.primary{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.btn.go{font-size:16px;padding:10px 24px;background:var(--odin);color:var(--card);border-color:var(--odin)}
+.btn.go.seo{background:var(--seo);border-color:var(--seo)}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--odin);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+/* session */
+.sesi-row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.sesi-ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--paper)}
+.seg label{cursor:pointer;position:relative}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;padding:9px 16px;font-weight:600;font-size:14px;color:var(--ink-2)}
+.seg label+label span{border-left:1px solid var(--line)}
+.seg input:checked+span{background:var(--odin-soft);color:var(--odin)}
+.seg input[value="seo"]:checked+span{background:var(--seo-soft);color:var(--seo)}
+.seg input:focus-visible+span{outline:2px solid var(--odin);outline-offset:-2px}
+#sesiCard.live{border-color:var(--ink-3)}
+.tv{display:grid;gap:10px;border-radius:6px}
+.tv-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tv-phase{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.tv-time{font-family:var(--f-mono);font-size:clamp(44px,12vw,64px);font-weight:600;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tv-sub{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.tv-bar{height:6px;background:var(--grid);border-radius:3px;overflow:hidden}
+.tv-bar i{display:block;height:100%;width:0;background:var(--odin)}
+.tv.seo .tv-bar i{background:var(--seo)}
+.tv.brk .tv-bar i{background:var(--p5)}
+.tv.brk .tv-time{color:var(--p5)}
+.tv.paused .tv-time{color:var(--ink-3)}
+.tv.over .tv-time{color:var(--warn)}
+.tv-btns{display:flex;gap:8px;flex-wrap:wrap}
+.tv-more{font-size:13px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:4px 14px}
+.in-float [data-only="main"]{display:none!important}
+body.float{background:var(--card);background-image:none;margin:0;padding:12px 14px}
+body.float .tv-time{font-size:46px}
+body.float .btn{padding:7px 12px}
+@media (prefers-reduced-motion:no-preference){.tv.ring{animation:ring 1s ease 3}@keyframes ring{50%{background:var(--hi);color:var(--hi-ink)}}}
+@media (prefers-reduced-motion:reduce){.tv.ring{outline:3px solid var(--hi)}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="label">Okt 2026 → Mar 2027 · Sen-Kam Odin · Jum-Sab SEO · Minggu review</div>
+    <h1>Logbook Menuju PKL</h1>
+    <div class="meta">
+      <span id="countdown"></span>
+      <span id="weeknow"></span>
+      <span class="status" id="store">tersimpan di browser ini</span>
+    </div>
+    <div id="alarm" hidden></div>
+    <div id="backupNag" class="banner" hidden></div>
+    <div class="stats" aria-label="Ringkasan">
+      <div class="stat"><span class="label">Streak</span><span class="v" id="sStreak">0 <small>hari</small></span><span class="muted" style="font-size:12px" id="sStreakSub">min. 30 menit/hari · Minggu & halangan tidak memutus</span></div>
+      <div class="stat"><span class="label">Minggu ini</span><span class="v" id="sWeek">0 <small>/ 18 jam</small></span><div class="meter"><i id="sWeekBar" style="width:0%"></i></div></div>
+      <div class="stat"><span class="label">Total jam</span><span class="v" id="sTotal">0</span><span class="muted" style="font-size:12px" id="sTotalSub">target realistis ~300</span></div>
+      <div class="stat"><span class="label">Roadmap</span><span class="v" id="sPct">0<small>%</small></span><div class="meter"><i id="sPctBar" style="width:0%"></i></div></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Bagian">
+    <button role="tab" id="tab-today" aria-controls="p-today" aria-selected="true">Hari ini</button>
+    <button role="tab" id="tab-roadmap" aria-controls="p-roadmap" aria-selected="false">Roadmap</button>
+    <button role="tab" id="tab-review" aria-controls="p-review" aria-selected="false">Review</button>
+    <button role="tab" id="tab-sources" aria-controls="p-sources" aria-selected="false">Sumber</button>
+    <button role="tab" id="tab-rules" aria-controls="p-rules" aria-selected="false">Aturan main</button>
+  </nav>
+
+  <!-- TODAY -->
+  <section class="panel" id="p-today" role="tabpanel" aria-labelledby="tab-today">
+    <div class="card" id="sesiCard">
+      <div id="sesiStart">
+        <div class="sesi-row">
+          <div style="min-width:0">
+            <h2>Mulai sesi</h2>
+            <p class="muted" style="font-size:14px;margin-top:4px">Fokus 50 menit, istirahat 5 menit. Saat selesai, waktunya langsung masuk ke log.</p>
+          </div>
+          <div class="sesi-ctl">
+            <div class="seg" role="radiogroup" aria-label="Jalur belajar">
+              <label><input type="radio" name="trk" value="odin" id="trkOdin"><span>Odin</span></label>
+              <label><input type="radio" name="trk" value="seo" id="trkSeo"><span>SEO</span></label>
+            </div>
+            <button type="button" class="btn go" id="startBtn">Mulai</button>
+          </div>
+        </div>
+        <p class="muted" id="pipNote" style="font-size:12px;margin-top:10px"></p>
+      </div>
+      <div id="sesiLive" hidden></div>
+      <div class="saved" id="sesiMsg" aria-live="polite" style="margin-top:6px"></div>
+    </div>
+    <div class="two">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+          <h2 id="todayTitle">Hari ini</h2>
+          <span id="todayTag" class="daytag"></span>
+        </div>
+        <p class="muted" id="todayHint" style="margin-top:6px;font-size:14px"></p>
+        <div id="todayLists" style="margin-top:10px"></div>
+        <div id="behind"></div>
+      </div>
+      <div class="card">
+        <h2>Catat jam</h2>
+        <div class="field"><label for="logDate">Tanggal</label><input type="date" id="logDate"></div>
+        <div class="logrow"><span class="daytag t-odin">Odin</span><span class="muted" style="font-size:13px">jam belajar coding</span>
+          <div class="stepper"><button type="button" id="odinMinus" aria-label="Kurangi setengah jam Odin">−</button><output id="odinVal">0</output><button type="button" id="odinPlus" aria-label="Tambah setengah jam Odin">+</button></div></div>
+        <div class="logrow"><span class="daytag t-seo">SEO</span><span class="muted" style="font-size:13px">jam SEO VA</span>
+          <div class="stepper"><button type="button" id="seoMinus" aria-label="Kurangi setengah jam SEO">−</button><output id="seoVal">0</output><button type="button" id="seoPlus" aria-label="Tambah setengah jam SEO">+</button></div></div>
+        <label class="check"><input type="checkbox" id="noAI"><span>Semua kode hari ini aku ketik sendiri. AI cuma buat tanya konsep.</span></label>
+        <div class="field"><label for="halangan">Ada halangan hari ini?</label>
+          <select id="halangan"><option value="">Tidak ada</option><option value="sakit">Sakit</option><option value="acara">Acara pondok / sekolah</option><option value="ujian">Ujian</option><option value="perjalanan">Perjalanan</option><option value="listrik">Tidak ada laptop / listrik / internet</option><option value="lainnya">Lainnya</option></select>
+          <span class="muted" style="font-size:12px">Hari halangan tidak memutus streak dan dikeluarkan dari target minggu ini. Malas dan capek bukan halangan.</span></div>
+        <div class="field"><label for="note">Besok mulai dari… <span class="muted">(1 kalimat, ditulis di akhir sesi)</span></label><textarea id="note" placeholder="Contoh: lanjut Flexbox Alignment, soal nomor 3 masih bingung justify-content"></textarea></div>
+        <div class="saved" id="savedMsg" aria-live="polite"></div>
+        <div id="lastNote" class="banner" style="margin-top:10px" hidden></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline">
+        <h2>Jam per minggu</h2><span class="muted" style="font-size:13px">garis putus = target minggu itu</span>
+      </div>
+      <div class="chart" id="chart" aria-label="Grafik jam per minggu"></div>
+      <div class="modes" id="modesStrip" aria-hidden="true"></div>
+      <div class="axis" id="axis" aria-hidden="true"></div>
+      <div class="legend">
+        <span><i style="background:var(--odin)"></i>jam tercatat</span>
+        <span><i style="background:var(--hi)"></i>minggu ini</span>
+        <span><i style="background:var(--warn)"></i>perkiraan UAS</span>
+        <span><i style="background:var(--ok)"></i>perkiraan libur</span>
+        <span><i style="background:var(--p5)"></i>Ramadhan (perkiraan)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="panel" id="p-roadmap" role="tabpanel" aria-labelledby="tab-roadmap" hidden>
+    <div class="prose">
+      <p>20 minggu, 5 fase. Tiap fase ditutup <b>gate</b>: syarat lulus yang harus dicentang jujur, tanpa bantuan AI menulis kode. Belum lulus gate, jangan lanjut fase berikutnya.</p>
+      <p class="muted" style="font-size:14px">Target normal: Odin 12 jam (Sen-Kam × 3 jam), SEO 6 jam (Jum-Sab × 3 jam). Minggu UAS dan Ramadhan target turun. Minggu libur target naik.</p>
+    </div>
+    <div id="roadmap" style="display:grid;gap:26px"></div>
+  </section>
+
+  <!-- REVIEW -->
+  <section class="panel" id="p-review" role="tabpanel" aria-labelledby="tab-review" hidden>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+        <h2>Review mingguan</h2>
+        <div style="min-width:180px"><label class="label" for="revWeek">Minggu</label><select id="revWeek"></select></div>
+      </div>
+      <p class="muted" style="margin-top:6px;font-size:14px">Tiap Minggu, 15 menit. Jawab pendek. Kalau dua minggu berturut-turut jam di bawah 75% target, potong SEO dulu.</p>
+      <div id="revSummary" class="banner" style="margin-top:12px"></div>
+      <div class="field"><label for="revWins">Apa yang selesai minggu ini?</label><textarea id="revWins"></textarea></div>
+      <div class="field"><label for="revBlock">Apa yang bikin macet?</label><textarea id="revBlock"></textarea></div>
+      <div class="field"><label for="revNext">Satu perubahan untuk minggu depan</label><textarea id="revNext"></textarea></div>
+      <div class="saved" id="revSaved" aria-live="polite"></div>
+    </div>
+    <div class="card" id="backupCard">
+      <h2>Cadangan data</h2>
+      <p class="muted" style="margin-top:6px;font-size:14px;max-width:68ch">Semua data cuma tersimpan di browser ini. Hapus riwayat browser, ganti laptop, atau buka di HP, datanya tidak ikut. Unduh cadangan tiap Minggu setelah review.</p>
+      <div class="btnrow">
+        <button type="button" class="btn" id="exportBtn">Unduh cadangan (.json)</button>
+        <label class="btn" for="importFile">Pulihkan dari file</label>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+      </div>
+      <div id="importConfirm" class="banner" style="margin-top:12px" hidden></div>
+      <div class="saved" id="backupMsg" aria-live="polite" style="margin-top:6px"></div>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="panel" id="p-sources" role="tabpanel" aria-labelledby="tab-sources" hidden>
+    <div class="prose">
+      <p>Semua sumber di bawah gratis, dicek Oktober 2026. Satu sumber utama per topik. Sumber pendamping hanya dibuka saat mentok.</p>
+    </div>
+    <div class="card tablewrap">
+      <table>
+        <thead><tr><th>Topik</th><th>Sumber</th><th>Isi & cara pakai</th><th>Peran</th></tr></thead>
+        <tbody id="srcBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- RULES -->
+  <section class="panel" id="p-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
+    <div class="card">
+      <h2 style="margin-bottom:12px">Bentuk satu sesi (3 jam)</h2>
+      <div class="session">
+        <div><div class="label">Buka</div><div class="mono">5 mnt</div><p class="muted" style="font-size:14px">Baca catatan "besok mulai dari" kemarin. Langsung mulai dari situ.</p></div>
+        <div><div class="label">Kerja</div><div class="mono">2 j 40 mnt</div><p class="muted" style="font-size:14px">Project dulu. Baca lesson saat mentok. Istirahat 5 menit tiap 50 menit.</p></div>
+        <div><div class="label">Tutup</div><div class="mono">15 mnt</div><p class="muted" style="font-size:14px">Commit, catat jam, tulis 1 kalimat "besok mulai dari".</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2 style="margin-bottom:12px">Aturan main</h2>
+      <ol class="rules">
+        <li><b>Minimal 30 menit, setiap hari.</b> Hari buruk tetap buka laptop 30 menit. Itu yang menjaga streak, dan streak yang menjaga kamu.</li>
+        <li><b>AI tidak menulis kode.</b> Boleh tanya konsep atau minta jelaskan error, setelah 20 menit mentok sendiri.</li>
+        <li><b>Ketik ulang, jangan copy-paste.</b> Termasuk dari video.</li>
+        <li><b>Project dulu, materi belakangan.</b> Kamu bukan nol total. Coba kerjakan, baru baca lesson kalau buntu.</li>
+        <li><b>Gate harus jujur.</b> Lulus dengan bantuan AI berarti belum lulus.</li>
+        <li><b>Molor? Potong SEO dulu.</b> Odin, PHP, dan Laravel tidak dipotong.</li>
+        <li><b>Senin-Kamis milik Odin.</b> Order SEO yang masuk dikerjakan Jumat-Sabtu.</li>
+        <li><b>Proyek lain beku sampai PKL.</b> MyKos, Laya, hackathon baru: catat idenya, jangan dikerjakan.</li>
+        <li><b>Semua latihan di-push ke GitHub.</b> Kotak hijau di profil itu bukti, bukan sertifikat.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-bottom:12px">Kalau ada halangan</h2>
+      <ol class="rules">
+        <li><b>Halangan berarti tidak bisa pegang laptop sama sekali.</b> Sakit, acara pondok, ujian, perjalanan, listrik atau internet mati. Malas dan capek tidak masuk.</li>
+        <li><b>Masih bisa 30 menit? Kerjakan 30 menit.</b> Jangan tandai halangan. Streak tetap jalan.</li>
+        <li><b>Tandai di tab Hari ini.</b> Pilih tanggalnya, pilih jenis halangan. Target minggu itu otomatis turun, streak tidak putus.</li>
+        <li><b>Tugas tidak hilang.</b> Yang belum dicentang dari minggu lalu muncul di daftar <i>Tertinggal</i>. Kejar itu dulu sebelum tugas minggu baru.</li>
+        <li><b>Odin tertinggal dikejar di slot SEO.</b> Jumat-Sabtu dipakai untuk Odin sampai daftar Tertinggal bersih.</li>
+        <li><b>Lebih dari 5 hari halangan sebulan:</b> angkanya muncul di statistik. Cek jujur, mana yang benar-benar halangan.</li>
+        <li><b>Hilang satu minggu penuh:</b> jangan geser semua jadwal. Potong tugas opsional dan SEO, lalu kabari aku untuk menyusun ulang sisa roadmap.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-bottom:12px">Kalau-maka</h2>
+      <ol class="rules">
+        <li>Kalau minggu UAS: target turun ke 11 jam. Tetap 30 menit/hari.</li>
+        <li>Kalau libur di rumah: naikkan ke 5-6 jam/hari. Itu tabungan untuk Ramadhan.</li>
+        <li>Kalau Ramadhan: tidak ada materi baru yang berat. Rapikan proyek, portfolio, review.</li>
+        <li>Kalau minggu 13 gate JS belum lulus: hentikan SEO sampai lulus.</li>
+        <li>Kalau muncul ide proyek baru: tulis di catatan, kerjakan setelah PKL.</li>
+      </ol>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+"use strict";
+var START = new Date(2026,9,12); // Senin 12 Okt 2026 = Minggu 1
+var PKL = new Date(2027,2,1);
+var DAY = 864e5;
+var MONTHS = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+var MODES = {
+  normal:{label:"Normal", odin:12, seo:6},
+  uas:{label:"Perkiraan UAS", odin:8, seo:3},
+  libur:{label:"Perkiraan libur", odin:24, seo:6},
+  ramadan:{label:"Ramadhan", odin:8, seo:3}
+};
+var O = function(s){return "https://www.theodinproject.com/lessons/"+s;};
+var URL = {
+  ahrefs:"https://ahrefs.com/academy/seo-training-course",
+  ahrefsKw:"https://ahrefs.com/academy/seo-training-course/lesson-1-2",
+  ahrefsTech:"https://ahrefs.com/academy/technical-seo-course",
+  starter:"https://developers.google.com/search/docs/fundamentals/seo-starter-guide",
+  titleLink:"https://developers.google.com/search/docs/appearance/title-link",
+  robots:"https://developers.google.com/search/docs/crawling-indexing/robots/intro",
+  sitemap:"https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview",
+  sd:"https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+  rich:"https://search.google.com/test/rich-results",
+  psi:"https://pagespeed.web.dev",
+  cwv:"https://web.dev/articles/vitals",
+  gsc:"https://search.google.com/search-console",
+  looker:"https://lookerstudio.google.com",
+  frog:"https://www.screamingfrog.co.uk/seo-spider/",
+  sqlbolt:"https://sqlbolt.com",
+  php:"https://laracasts.com/series/php-for-beginners-2023-edition",
+  lvLearn:"https://laravel.com/learn",
+  lfs:"https://laracasts.com/series/laravel-from-scratch-2026",
+  lvAuth:"https://laravel.com/docs/authorization",
+  ghpages:"https://pages.github.com"
+};
+
+var PHASES = [
+  {id:1, name:"Fondasi Web", weeks:[1,7], color:"var(--p1)", desc:"Odin Foundations: Git, HTML, CSS, Flexbox, JavaScript dasar.",
+   gate:["Landing Page jadi tanpa AI dan mirip desain aslinya","Calculator jalan, termasuk kasus bagi nol dan desimal","Semua project ada di GitHub dengan commit yang rapi"]},
+  {id:2, name:"JavaScript Inti", weeks:[8,11], color:"var(--p2)", desc:"Odin JavaScript: objek, module, class, async, fetch API.",
+   gate:["Weather App ambil data API asli dan tampil rapi","Bisa jelaskan async/await dan Promise dengan kata-katamu sendiri","Library dan Tic Tac Toe pakai object/module, bukan variabel global"]},
+  {id:3, name:"SQL & PHP", weeks:[12,14], color:"var(--p3)", desc:"SQLBolt lalu PHP For Beginners. Fondasi sebelum Laravel.",
+   gate:["Tulis JOIN, GROUP BY, dan subquery dari kepala","Notes app PHP native dengan login, ditulis ulang tanpa video","Bisa jelaskan kenapa prepared statement mencegah SQL injection"]},
+  {id:4, name:"Laravel", weeks:[15,17], color:"var(--p4)", desc:"Laravel resmi + Laracasts, ditutup proyek mandiri dengan role dan audit log. Selesai sebelum Ramadhan.",
+   gate:["Inventaris Lab: CRUD, login, role admin/staff, audit log","Seluruh kode diketik sendiri, AI hanya untuk tanya konsep","README menjelaskan struktur dan bagian yang kamu tulis sendiri"]},
+  {id:5, name:"Ramadhan & Siap PKL", weeks:[18,20], color:"var(--p5)", desc:"Mode ringan. Rapikan, portfolio, Git workflow, persiapan PKL.",
+   gate:["Portfolio online dengan 3 proyek dari roadmap ini","Lancar branch, commit, push, pull request","Sudah tahu stack dan posisi PKL di KBSE"]}
+];
+
+// [id, teks, url]
+var WEEKS = [
+ {n:1, mode:"normal", seoLv:"L1 Dasar",
+  odin:[["w1o1","Introduction: 5 lesson pembuka sampai Join the Odin Community",O("foundations-how-this-course-will-work")],
+        ["w1o2","How Does the Web Work, Installations, Text Editors",O("foundations-how-does-the-web-work")],
+        ["w1o3","Command Line Basics",O("foundations-command-line-basics")],
+        ["w1o4","Setting up Git, Introduction to Git, Git Basics",O("foundations-git-basics")],
+        ["w1o5","Buat repo <code>learning-log</code> di GitHub, commit pertama",""]],
+  seo:[["w1s1","Baca Google SEO Starter Guide, catat 10 poin penting",URL.starter],
+       ["w1s2","Ahrefs SEO Course: bagian dasar cara kerja search engine",URL.ahrefs]]},
+ {n:2, mode:"normal", seoLv:"L1 Dasar",
+  odin:[["w2o1","Intro to HTML and CSS, Elements and Tags, HTML Boilerplate",O("foundations-introduction-to-html-and-css")],
+        ["w2o2","Working with Text, Lists, Links and Images",O("foundations-working-with-text")],
+        ["w2o3","Commit Messages",O("foundations-commit-messages")],
+        ["w2o4","Project: Recipes, tanpa lihat solusi orang lain",O("foundations-recipes")]],
+  seo:[["w2s1","Ahrefs: keyword research dan search intent",URL.ahrefsKw],
+       ["w2s2","Latihan: 20 keyword untuk 1 bisnis lokal, kelompokkan per intent",""]]},
+ {n:3, mode:"normal", seoLv:"L2 On-page",
+  odin:[["w3o1","Intro to CSS, The Cascade, Inspecting HTML and CSS",O("foundations-intro-to-css")],
+        ["w3o2","The Box Model, Block and Inline",O("foundations-the-box-model")],
+        ["w3o3","Flexbox: Introduction, Growing and Shrinking, Axes, Alignment",O("foundations-introduction-to-flexbox")],
+        ["w3o4","Kasih CSS sendiri ke Project Recipes",""]],
+  seo:[["w3s1","Ahrefs: on-page SEO (title, meta, heading, konten)",URL.ahrefs],
+       ["w3s2","Google docs: title links dan snippet",URL.titleLink]]},
+ {n:4, mode:"normal", seoLv:"L2 On-page",
+  odin:[["w4o1","Project: Landing Page",O("foundations-landing-page")],
+        ["w4o2","Variables and Operators, Installing Node.js",O("foundations-variables-and-operators")],
+        ["w4o3","Data Types and Conditionals, JavaScript Developer Tools",O("foundations-data-types-and-conditionals")]],
+  seo:[["w4s1","Install Screaming Frog versi gratis (maks 500 URL)",URL.frog],
+       ["w4s2","Audit on-page 2 website bisnis lokal, isi template di Google Sheets",""]]},
+ {n:5, mode:"normal", seoLv:"L2 On-page",
+  odin:[["w5o1","Function Basics, Problem Solving, Understanding Errors",O("foundations-function-basics")],
+        ["w5o2","Project: Rock Paper Scissors",O("foundations-rock-paper-scissors")],
+        ["w5o3","Clean Code, Loops and Arrays",O("foundations-loops-and-arrays")]],
+  seo:[["w5s1","Rapikan 1 audit jadi sampel portofolio (nama bisnis disamarkan)",""],
+       ["w5s2","Cek syarat umur platform, lalu siapkan gig on-page SEO fix",""]]},
+ {n:6, mode:"normal", seoLv:"L3 Technical",
+  odin:[["w6o1","DOM Manipulation and Events",O("foundations-dom-manipulation-and-events")],
+        ["w6o2","Revisiting Rock Paper Scissors",O("foundations-revisiting-rock-paper-scissors")],
+        ["w6o3","Project: Etch-a-Sketch",O("foundations-etch-a-sketch")]],
+  seo:[["w6s1","robots.txt, sitemap, canonical dari dokumentasi Google",URL.robots],
+       ["w6s2","Ahrefs Technical SEO Course: crawling dan indexing",URL.ahrefsTech]]},
+ {n:7, mode:"normal", seoLv:"L3 Technical",
+  odin:[["w7o1","Object Basics",O("foundations-object-basics")],
+        ["w7o2","Project: Calculator",O("foundations-calculator")],
+        ["w7o3","Choose Your Path Forward: pilih Full Stack JavaScript",O("foundations-choose-your-path-forward")]],
+  seo:[["w7s1","Core Web Vitals: tes 5 situs di PageSpeed Insights, catat masalahnya",URL.psi],
+       ["w7s2","Deploy Landing Page ke GitHub Pages, daftarkan di Search Console",URL.gsc]]},
+ {n:8, mode:"normal", seoLv:"L4 Schema & data",
+  odin:[["w8o1","Organizing Code with Objects, Object Constructors",O("node-path-javascript-organizing-code-with-objects")],
+        ["w8o2","Project: Library",O("node-path-javascript-library")],
+        ["w8o3","Factory Functions and the Module Pattern",O("node-path-javascript-factory-functions-and-the-module-pattern")]],
+  seo:[["w8s1","Structured data: pengantar dari Google",URL.sd],
+       ["w8s2","Tulis JSON-LD LocalBusiness sendiri, validasi di Rich Results Test",URL.rich]]},
+ {n:9, mode:"uas", seoLv:"L4 Schema & data",
+  odin:[["w9o1","Project: Tic Tac Toe",O("node-path-javascript-tic-tac-toe")],
+        ["w9o2","Classes",O("node-path-javascript-classes")]],
+  seo:[["w9s1","Search Console: baca laporan Performance dan Pages di situsmu",URL.gsc]],
+  note:"Perkiraan minggu UAS. Sesuaikan dengan jadwal sekolah."},
+ {n:10, mode:"uas", seoLv:"L4 Schema & data",
+  odin:[["w10o1","ES6 Modules, npm, JSON",O("javascript-es6-modules")],
+        ["w10o2","Form Validation with JavaScript",O("node-path-javascript-form-validation-with-javascript")]],
+  seo:[["w10s1","Template laporan bulanan klien di Looker Studio",URL.looker]],
+  note:"Perkiraan minggu UAS."},
+ {n:11, mode:"libur", seoLv:"L5 Klien",
+  odin:[["w11o1","Asynchronous Code, Working with APIs, Async and Await",O("node-path-javascript-asynchronous-code")],
+        ["w11o2","Project: Weather App",O("node-path-javascript-weather-app")],
+        ["w11o3","Linting dan ECMAScript (bacaan ringan)",O("node-path-javascript-linting")],
+        ["w11o4","Opsional kalau waktu sisa: Webpack + Project Restaurant Page",O("javascript-webpack")]],
+  seo:[["w11s1","Outreach: kirim 10 proposal atau pesan penawaran",""],
+       ["w11s2","Kerjakan order yang masuk, catat waktu per order",""]],
+  note:"Perkiraan libur akhir tahun. Kalau di rumah, ini minggu tabungan jam."},
+ {n:12, mode:"libur", seoLv:"L5 Klien",
+  odin:[["w12o1","SQLBolt lesson 1-12: SELECT, filter, JOIN, aggregate",URL.sqlbolt],
+        ["w12o2","SQLBolt lesson 13-18 + 10 query latihan dari kepala",URL.sqlbolt],
+        ["w12o3","PHP For Beginners ep 1-11 (The Fundamentals) + quiz",URL.php]],
+  seo:[["w12s1","Outreach 10 proposal + kerjakan order",""]],
+  note:"Perkiraan libur. Fase 3 mulai."},
+ {n:13, mode:"normal", seoLv:"L5 Klien",
+  odin:[["w13o1","PHP For Beginners ep 12-20: router, MySQL, PDO, SQL injection",URL.php],
+        ["w13o2","PHP For Beginners ep 21-28: Notes mini-project, form, validasi",URL.php]],
+  seo:[["w13s1","Outreach 10 proposal + kerjakan order",""]]},
+ {n:14, mode:"normal", seoLv:"L5 Klien",
+  odin:[["w14o1","PHP For Beginners ep 29-36: struktur proyek, namespace, router",URL.php],
+        ["w14o2","PHP For Beginners ep 37-46: session, register, middleware, hashing, login",URL.php],
+        ["w14o3","Ketik ulang Notes app dari nol tanpa video",""]],
+  seo:[["w14s1","Outreach 10 proposal + kerjakan order",""]]},
+ {n:15, mode:"normal", seoLv:"L5 Klien",
+  odin:[["w15o1","Laravel Learn resmi: PHP Fundamentals (10 video, ~71 menit)",URL.lvLearn],
+        ["w15o2","Laravel Learn resmi: Getting Started with Laravel (13 video, ~2 jam)",URL.lvLearn],
+        ["w15o3","Laravel From Scratch 2026: setup, routing, view, form, validasi",URL.lfs]],
+  seo:[["w15s1","Kerjakan order yang ada, outreach dikurangi",""]]},
+ {n:16, mode:"normal", seoLv:"L5 Klien",
+  odin:[["w16o1","Laravel From Scratch 2026: Eloquent, relasi, autentikasi",URL.lfs],
+        ["w16o2","Laravel From Scratch 2026: authorization + baca docs Gates & Policies",URL.lvAuth]],
+  seo:[["w16s1","Kerjakan order yang ada",""]]},
+ {n:17, mode:"normal", seoLv:"L5 Klien",
+  odin:[["w17o1","Proyek mandiri Inventaris Lab: CRUD barang + login",""],
+        ["w17o2","Tambah role admin/staff (Policy) + audit log siapa mengubah apa",""],
+        ["w17o3","Push ke GitHub + README jujur soal bagian yang kamu tulis sendiri",""]],
+  seo:[["w17s1","Kerjakan order yang ada",""]],
+  note:"Gate Fase 4 sekaligus menutup Phase 0 Technical VA."},
+ {n:18, mode:"ramadan", seoLv:"Klien saja",
+  odin:[["w18o1","Inventaris Lab: perbaiki bug, rapikan validasi, tes manual",""],
+        ["w18o2","A Deeper Look at Git, Working with Remotes, Using Git in the Real World",O("javascript-a-deeper-look-at-git")]],
+  seo:[["w18s1","1 hari/minggu: layani klien yang sudah ada",""]],
+  note:"Perkiraan awal Ramadhan sekitar 8 Feb 2027, tunggu sidang isbat."},
+ {n:19, mode:"ramadan", seoLv:"Klien saja",
+  odin:[["w19o1","Portfolio site HTML/CSS/JS murni: Weather App, Notes PHP, Inventaris Lab",""],
+        ["w19o2","Deploy portfolio ke GitHub Pages",URL.ghpages]],
+  seo:[["w19s1","1 hari/minggu: layani klien yang sudah ada",""]]},
+ {n:20, mode:"ramadan", seoLv:"Klien saja",
+  odin:[["w20o1","Tanya papa: nama lengkap KBSE, stack yang dipakai, posisimu",""],
+        ["w20o2","Ulang 1 latihan tersulit dari tiap fase tanpa catatan",""],
+        ["w20o3","Tulis daftar 'sudah bisa / belum bisa' untuk mentor PKL",""]],
+  seo:[["w20s1","1 hari/minggu: layani klien yang sudah ada",""]],
+  note:"Minggu terakhir sebelum PKL."}
+];
+
+var SOURCES = [
+ ["Fondasi web","The Odin Project: Foundations","https://www.theodinproject.com/paths/foundations/courses/foundations","Git, HTML, CSS, Flexbox, JS dasar. Kerjakan semua project-nya.","Utama"],
+ ["JavaScript","The Odin Project: JavaScript","https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript","Objek, module, class, async, API. Dipakai sebagian: bagian testing dan CS menyusul setelah PKL.","Utama"],
+ ["JavaScript","javascript.info","https://javascript.info","Referensi saat penjelasan Odin kurang. Baca bab yang relevan saja.","Pendamping"],
+ ["Web umum","MDN Web Docs","https://developer.mozilla.org","Kamus resmi HTML, CSS, JS. Cari di sini sebelum tanya AI.","Pendamping"],
+ ["SQL","SQLBolt","https://sqlbolt.com","Latihan interaktif SELECT sampai JOIN dan aggregate. Langsung praktik di browser.","Utama"],
+ ["PHP","Laracasts: PHP For Beginners","https://laracasts.com/series/php-for-beginners-2023-edition","50 episode, ~10,7 jam. Bangun Notes app dari nol: router, PDO, session, login.","Utama"],
+ ["Laravel","Laravel Learn (resmi)","https://laravel.com/learn","Dua kursus mini gratis: PHP Fundamentals dan Getting Started with Laravel.","Utama"],
+ ["Laravel","Laracasts: Laravel From Scratch (2026)","https://laracasts.com/series/laravel-from-scratch-2026","Seri terbaru, Laravel 12 ke atas: auth, authorization, queue, testing, deploy. Kalau ada episode berbayar, lewati dan pakai docs.","Utama"],
+ ["Laravel","Dokumentasi Laravel","https://laravel.com/docs","Sumber kebenaran. Wajib untuk Authorization (Gates & Policies).","Pendamping"],
+ ["Bahasa Indonesia","Web Programming UNPAS (YouTube)","https://www.youtube.com/results?search_query=web+programming+unpas","Cadangan berbahasa Indonesia untuk PHP dan Laravel, kalau materi Inggris terlalu berat.","Cadangan"],
+ ["SEO","Google SEO Starter Guide","https://developers.google.com/search/docs/fundamentals/seo-starter-guide","Dasar resmi dari Google. Kalau sumber lain bertentangan, ikuti Google.","Utama"],
+ ["SEO","Ahrefs: SEO Course for Beginners","https://ahrefs.com/academy/seo-training-course","14 lesson, ~2 jam, gratis tanpa daftar. Keyword, on-page, link building, technical dasar.","Utama"],
+ ["SEO","Ahrefs: Technical SEO Course","https://ahrefs.com/academy/technical-seo-course","Crawling, indexing, struktur situs. Pembeda kamu sebagai Technical SEO VA.","Utama"],
+ ["SEO tools","Screaming Frog SEO Spider","https://www.screamingfrog.co.uk/seo-spider/","Crawler untuk audit. Versi gratis sampai 500 URL, cukup untuk situs bisnis kecil.","Alat"],
+ ["SEO tools","Search Console + PageSpeed Insights","https://search.google.com/search-console","Data asli dari Google dan skor Core Web Vitals.","Alat"],
+ ["SEO tools","Rich Results Test + schema.org","https://search.google.com/test/rich-results","Validasi JSON-LD yang kamu tulis sendiri.","Alat"]
+];
+
+/* ---------- state ---------- */
+var state = {checks:{}, logs:{}, reviews:{}};
+var mode = "local", storageOK = true;
+var LS = "logbook-pkl-v1";
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}}
+function lsDel(k){try{localStorage.removeItem(k);}catch(e){}}
+function lsLoad(){var r=lsGet(LS);if(!r)return;try{var d=JSON.parse(r);state.checks=d.checks||{};state.logs=d.logs||{};state.reviews=d.reviews||{};}catch(e){}}
+function lsSave(){storageOK=lsSet(LS,JSON.stringify(state));
+  if(!storageOK)flash("savedMsg","Gagal menyimpan. Penyimpanan browser penuh atau diblokir. Unduh cadangan sekarang.");}
+
+/* ---------- dates ---------- */
+function strip(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+function addDays(d,n){var x=strip(d);x.setDate(x.getDate()+n);return x;}
+function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function parseYmd(s){var p=s.split("-").map(Number);return new Date(p[0],p[1]-1,p[2]);}
+function dayDiff(a,b){return Math.round((strip(a)-strip(b))/DAY);}
+function weekOf(d){return Math.floor(dayDiff(d,START)/7)+1;}
+function weekStart(n){return addDays(START,(n-1)*7);}
+function fmtRange(n){var a=weekStart(n),b=addDays(a,6);
+  return a.getMonth()===b.getMonth()? a.getDate()+"–"+b.getDate()+" "+MONTHS[a.getMonth()] : a.getDate()+" "+MONTHS[a.getMonth()]+"–"+b.getDate()+" "+MONTHS[b.getMonth()];}
+function today(){return strip(new Date());}
+function fmtH(h){return (Math.round(h*10)/10).toString().replace(".",",");}
+
+/* ---------- derived ---------- */
+function logOf(s){return state.logs[s]||null;}
+function dayTotal(s){var l=logOf(s);return l?((+l.odin||0)+(+l.seo||0)):0;}
+function weekHours(n){var t=0,a=weekStart(n);for(var i=0;i<7;i++)t+=dayTotal(ymd(addDays(a,i)));return t;}
+function dayTarget(d){var w=WEEKS[weekOf(d)-1];if(!w)return 0;var m=MODES[w.mode],wd=d.getDay();
+  if(wd>=1&&wd<=4)return m.odin/4; if(wd===5||wd===6)return m.seo/2; return 0;}
+function isBlocked(s){var l=state.logs[s];return !!(l&&l.halangan);}
+function weekTarget(n){if(!WEEKS[n-1])return 0;var a=weekStart(n),t=0;for(var i=0;i<7;i++){var d=addDays(a,i);if(!isBlocked(ymd(d)))t+=dayTarget(d);}return Math.round(t*10)/10;}
+function blockedDays(n){var c=0,a=weekStart(n);for(var i=0;i<7;i++)if(isBlocked(ymd(addDays(a,i))))c++;return c;}
+function totalHours(){var t=0;for(var k in state.logs)t+=dayTotal(k);return t;}
+function streak(){
+  var d=today(),c=0;
+  if(dayTotal(ymd(d))<0.5)d=addDays(d,-1);
+  for(var i=0;i<400 && d>=START;i++){
+    var s=ymd(d),h=dayTotal(s);
+    if(isBlocked(s)&&h<0.5){d=addDays(d,-1);continue;}
+    if(d.getDay()===0){if(h>=0.5)c++;d=addDays(d,-1);continue;}
+    if(h>=0.5){c++;d=addDays(d,-1);}else break;
+  }
+  return c;
+}
+function allTaskIds(){var ids=[];WEEKS.forEach(function(w){w.odin.concat(w.seo).forEach(function(t){ids.push(t[0]);});});
+  PHASES.forEach(function(p){p.gate.forEach(function(_,i){ids.push("g"+p.id+"-"+i);});});return ids;}
+function phaseIds(p){var ids=[];for(var n=p.weeks[0];n<=p.weeks[1];n++){var w=WEEKS[n-1];w.odin.concat(w.seo).forEach(function(t){ids.push(t[0]);});}
+  p.gate.forEach(function(_,i){ids.push("g"+p.id+"-"+i);});return ids;}
+function pct(ids){if(!ids.length)return 0;var d=ids.filter(function(i){return state.checks[i];}).length;return Math.round(d/ids.length*100);}
+function phaseOfWeek(n){for(var i=0;i<PHASES.length;i++){if(n>=PHASES[i].weeks[0]&&n<=PHASES[i].weeks[1])return PHASES[i];}return null;}
+
+/* ---------- writes ---------- */
+var dirty={}, persistT=null;
+function flash(id,msg){var el=document.getElementById(id);if(el)el.textContent=msg;}
+function nowTime(){var d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
+function persist(msgId){clearTimeout(persistT);persistT=setTimeout(function(){persistT=null;lsSave();if(msgId&&storageOK)flash(msgId,"Tersimpan "+nowTime());syncBackupNag();},250);}
+function saveChecks(){persist(null);}
+function saveLog(date,immediate){persist("savedMsg");}
+function saveReview(wk){persist("revSaved");}
+
+/* ---------- render: static builds ---------- */
+var NOW = today(), WNOW = weekOf(NOW);
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function taskLi(t,prefix,track){
+  var id=prefix+t[0];
+  var link=t[2]?'<a class="src" href="'+esc(t[2])+'" target="_blank" rel="noopener">buka ↗</a>':"<span></span>";
+  return '<li data-li="'+t[0]+'"><input type="checkbox" id="'+id+'" data-task="'+t[0]+'"><label for="'+id+'">'+t[1]+'</label>'+link+'</li>';
+}
+function buildToday(){
+  var wd=NOW.getDay(), wk=Math.min(Math.max(WNOW,1),20), w=WEEKS[wk-1];
+  var tag=document.getElementById("todayTag"), title=document.getElementById("todayTitle"), hint=document.getElementById("todayHint"), box=document.getElementById("todayLists");
+  var hari=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][wd];
+  title.textContent=hari+", "+NOW.getDate()+" "+MONTHS[NOW.getMonth()];
+  if(NOW<START){hint.textContent="Roadmap mulai Senin 12 Okt 2026.";}
+  if(WNOW>20){tag.className="daytag t-rev";tag.textContent="PKL";hint.textContent="Roadmap selesai. Waktunya PKL. Log tetap bisa diisi.";box.innerHTML="";return;}
+  var odinFirst = wd>=1&&wd<=4, seoDay = wd===5||wd===6;
+  if(odinFirst){tag.className="daytag t-odin";tag.textContent="Hari Odin";hint.textContent="Minggu "+wk+" · target 3 jam. Kerjakan dari atas, yang belum dicentang.";}
+  else if(seoDay){tag.className="daytag t-seo";tag.textContent="Hari SEO";hint.textContent="Minggu "+wk+" · "+w.seoLv+" · target 3 jam.";}
+  else{tag.className="daytag t-rev";tag.textContent="Hari review";hint.textContent="Isi review mingguan (15 menit), lalu istirahat. Kalau masih ada tugas tertinggal, boleh dikejar.";}
+  var oList='<h3 class="t-odin" style="margin:8px 0 4px">Odin · minggu '+wk+'</h3><ul class="tasks">'+w.odin.map(function(t){return taskLi(t,"td-","odin");}).join("")+'</ul>';
+  var sList='<h3 class="t-seo" style="margin:14px 0 4px">SEO · '+esc(w.seoLv)+'</h3><ul class="tasks seo">'+w.seo.map(function(t){return taskLi(t,"td-","seo");}).join("")+'</ul>';
+  box.innerHTML = seoDay ? sList+'<details style="margin-top:12px"><summary class="muted" style="cursor:pointer;font-size:14px">Lihat tugas Odin minggu ini</summary>'+oList+'</details>'
+                         : oList+'<details style="margin-top:12px"><summary class="muted" style="cursor:pointer;font-size:14px">Lihat tugas SEO minggu ini</summary>'+sList+'</details>';
+  if(w.note){box.insertAdjacentHTML("beforeend",'<p class="banner" style="margin-top:12px;font-size:13px">'+esc(w.note)+'</p>');}
+}
+function buildRoadmap(){
+  var html="";
+  PHASES.forEach(function(p){
+    html+='<div class="phase"><div class="phasehead"><span class="stripe" style="background:'+p.color+'"></span><div><div class="label">Fase '+p.id+' · Minggu '+p.weeks[0]+'–'+p.weeks[1]+'</div><h2>'+esc(p.name)+'</h2><p>'+esc(p.desc)+'</p></div><span class="pct" id="ppct'+p.id+'">0%</span></div>';
+    for(var n=p.weeks[0];n<=p.weeks[1];n++){
+      var w=WEEKS[n-1], m=MODES[w.mode], cur=n===WNOW;
+      var chips=(cur?'<span class="chip now">minggu ini</span> ':'')+(w.mode!=="normal"?'<span class="chip '+w.mode+'">'+m.label+'</span>':'');
+      html+='<details class="week'+(cur?' current':'')+'"'+(cur?' open':'')+' id="week'+n+'"><summary><span class="wk">M'+String(n).padStart(2,"0")+'</span><span class="wtitle">'+fmtRange(n)+'<small id="wh'+n+'">0 / '+(m.odin+m.seo)+' jam</small></span><span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">'+chips+'</span></summary>';
+      html+='<div class="weekbody"><div><div class="trackh"><h3 class="t-odin">Odin</h3><span class="label">'+m.odin+' jam</span></div><ul class="tasks">'+w.odin.map(function(t){return taskLi(t,"rm-");}).join("")+'</ul></div>';
+      html+='<div><div class="trackh"><h3 class="t-seo">SEO · '+esc(w.seoLv)+'</h3><span class="label">'+m.seo+' jam</span></div><ul class="tasks seo">'+w.seo.map(function(t){return taskLi(t,"rm-");}).join("")+'</ul></div>';
+      if(w.note)html+='<p class="weeknote">'+esc(w.note)+'</p>';
+      html+='</div></details>';
+    }
+    html+='<div class="gate" style="border-left-color:'+p.color+'"><h3><span class="label">Gate fase '+p.id+'</span>Lulus kalau semua benar</h3><ul class="tasks" style="margin-top:6px">'+
+      p.gate.map(function(g,i){return taskLi(["g"+p.id+"-"+i,esc(g),""],"rm-");}).join("")+'</ul></div></div>';
+  });
+  html+='<div class="gate" style="border-left-color:var(--hi)"><h3><span class="label">Minggu 21 · '+fmtRange(21)+'</span>PKL dimulai</h3><p class="muted" style="margin-top:4px;font-size:14px">Bawa: portfolio, GitHub, daftar "sudah bisa / belum bisa". React, Node, TypeScript, Linux deploy, dan CS50x menyusul saat atau setelah PKL.</p></div>';
+  document.getElementById("roadmap").innerHTML=html;
+}
+function buildChart(){
+  var c="",a="",m="",max=30;
+  for(var n=1;n<=20;n++){
+    var w=WEEKS[n-1],t=weekTarget(n);
+    c+='<div class="bar'+(n===WNOW?' now':'')+(n>WNOW?' future':'')+'" title="Minggu '+n+'"><span class="tgt" id="ct'+n+'" style="height:'+(t/max*100)+'%"></span><span class="got" id="cb'+n+'" style="height:0%"></span></div>';
+    var ws=weekStart(n),label=(n===1||ws.getDate()<=7)?MONTHS[ws.getMonth()]:String(n);
+    a+='<span class="'+((n===1||ws.getDate()<=7)?'m':'')+'">'+label+'</span>';
+    m+='<i class="'+(w.mode!=="normal"?w.mode:'')+'"></i>';
+  }
+  document.getElementById("chart").innerHTML=c;
+  document.getElementById("axis").innerHTML=a;
+  document.getElementById("modesStrip").innerHTML=m;
+}
+function buildSources(){
+  document.getElementById("srcBody").innerHTML=SOURCES.map(function(s){
+    return '<tr><td class="cat">'+esc(s[0])+'</td><td><a href="'+esc(s[2])+'" target="_blank" rel="noopener">'+esc(s[1])+'</a></td><td>'+esc(s[3])+'</td><td><span class="chip">'+esc(s[4])+'</span></td></tr>';
+  }).join("");
+}
+function buildReviewSelect(){
+  var sel=document.getElementById("revWeek"),o="";
+  for(var n=1;n<=20;n++){o+='<option value="'+n+'">Minggu '+n+' · '+fmtRange(n)+'</option>';}
+  sel.innerHTML=o; sel.value=String(Math.min(Math.max(WNOW,1),20));
+}
+
+/* ---------- render: sync ---------- */
+function syncChecks(){
+  document.querySelectorAll("input[data-task]").forEach(function(el){var on=!!state.checks[el.dataset.task];el.checked=on;var li=el.closest("li");if(li)li.classList.toggle("done",on);});
+  PHASES.forEach(function(p){var el=document.getElementById("ppct"+p.id);if(el)el.textContent=pct(phaseIds(p))+"%";});
+  var all=pct(allTaskIds());
+  document.getElementById("sPct").innerHTML=all+"<small>%</small>";
+  document.getElementById("sPctBar").style.width=all+"%";
+  syncBehind();
+}
+function syncBehind(){
+  var box=document.getElementById("behind");if(!box)return;
+  if(mode==="pending"||WNOW<2){box.innerHTML="";return;}
+  var o=[],s=[];
+  for(var n=1;n<Math.min(WNOW,21);n++){var w=WEEKS[n-1],tag='<span class="mono muted">M'+String(n).padStart(2,"0")+'</span> ';
+    w.odin.forEach(function(t){if(!state.checks[t[0]])o.push([t[0],tag+t[1],t[2]]);});
+    w.seo.forEach(function(t){if(!state.checks[t[0]])s.push([t[0],tag+t[1],t[2]]);});}
+  var all=o.concat(s);
+  if(!all.length){box.innerHTML="";return;}
+  box.innerHTML='<h3 style="margin:18px 0 2px;color:var(--warn)">Tertinggal ('+all.length+')</h3>'+
+    '<p class="muted" style="font-size:13px;margin-bottom:4px">Kejar ini dulu sebelum tugas minggu ini. Odin tertinggal boleh dikejar di slot SEO.</p>'+
+    '<ul class="tasks">'+all.slice(0,6).map(function(t){return taskLi(t,"bh-");}).join("")+'</ul>'+
+    (all.length>6?'<p class="muted" style="font-size:12px">+'+(all.length-6)+' lagi di tab Roadmap</p>':'');
+}
+function syncHours(){
+  var wk=Math.min(Math.max(WNOW,1),20),h=weekHours(wk),t=weekTarget(wk);
+  document.getElementById("sStreak").innerHTML=streak()+" <small>hari</small>";
+  document.getElementById("sWeek").innerHTML=fmtH(h)+" <small>/ "+fmtH(t)+" jam</small>";
+  var mk=ymd(NOW).slice(0,7),hb=Object.keys(state.logs).filter(function(k){return k.slice(0,7)===mk&&state.logs[k]&&state.logs[k].halangan;}).length;
+  var sub=document.getElementById("sStreakSub");
+  sub.textContent=hb?hb+" hari halangan bulan ini"+(hb>5?" · cek lagi":""):"min. 30 menit/hari · Minggu & halangan tidak memutus";
+  sub.style.color=hb>5?"var(--warn)":"";
+  document.getElementById("sWeekBar").style.width=Math.min(100,t?h/t*100:0)+"%";
+  var tot=totalHours();
+  document.getElementById("sTotal").textContent=fmtH(tot);
+  for(var n=1;n<=20;n++){var b=document.getElementById("cb"+n);if(b)b.style.height=Math.min(100,weekHours(n)/30*100)+"%";
+    var ct=document.getElementById("ct"+n);if(ct)ct.style.height=(weekTarget(n)/30*100)+"%";
+    var bd=blockedDays(n),lab=document.getElementById("wh"+n);if(lab)lab.textContent=fmtH(weekHours(n))+" / "+fmtH(weekTarget(n))+" jam"+(bd?" · "+bd+" hari halangan":"");}
+  // alarm
+  var al=document.getElementById("alarm");
+  if(mode!=="pending"&&WNOW>=3&&WNOW<=21){var a=WNOW-1,b=WNOW-2;
+    var ta=weekTarget(a),tb=weekTarget(b),ra=ta?weekHours(a)/ta:1,rb=tb?weekHours(b)/tb:1;
+    if(ra<0.75&&rb<0.75){al.hidden=false;al.className="banner warn";
+      al.innerHTML="<b>Alarm:</b> minggu "+b+" ("+fmtH(weekHours(b))+"/"+fmtH(tb)+" jam) dan minggu "+a+" ("+fmtH(weekHours(a))+"/"+fmtH(ta)+" jam) di bawah 75% target, setelah hari halangan dikeluarkan. Potong SEO minggu ini, jangan potong Odin.";}
+    else al.hidden=true;}else al.hidden=true;
+  syncLogPanel(); syncReview();
+}
+function curLogDate(){return document.getElementById("logDate").value||ymd(NOW);}
+function syncLogPanel(){
+  var d=curLogDate(),l=state.logs[d]||{};
+  document.getElementById("odinVal").textContent=fmtH(+l.odin||0);
+  document.getElementById("seoVal").textContent=fmtH(+l.seo||0);
+  var ai=document.getElementById("noAI");if(document.activeElement!==ai)ai.checked=!!l.noAI;
+  var hg=document.getElementById("halangan");if(document.activeElement!==hg)hg.value=l.halangan||"";
+  var nt=document.getElementById("note");if(document.activeElement!==nt&&!dirty["log:"+d])nt.value=l.note||"";
+  // last "besok mulai dari" before this date
+  var keys=Object.keys(state.logs).filter(function(k){return k<d&&state.logs[k]&&state.logs[k].note;}).sort();
+  var box=document.getElementById("lastNote");
+  if(keys.length){var k=keys[keys.length-1],pd=parseYmd(k);box.hidden=false;
+    box.innerHTML='<span class="label">Catatan '+pd.getDate()+' '+MONTHS[pd.getMonth()]+'</span><br>'+esc(state.logs[k].note);}
+  else box.hidden=true;
+}
+function revKey(n){return "w"+String(n).padStart(2,"0");}
+function syncReview(){
+  var n=+document.getElementById("revWeek").value||1,k=revKey(n),r=state.reviews[k]||{};
+  [["revWins","wins"],["revBlock","block"],["revNext","next"]].forEach(function(p){var el=document.getElementById(p[0]);
+    if(document.activeElement!==el&&!dirty["rev:"+k])el.value=r[p[1]]||"";});
+  var h=weekHours(n),t=weekTarget(n),ph=phaseOfWeek(n),w=WEEKS[n-1];
+  var ids=w.odin.concat(w.seo).map(function(x){return x[0];}),done=ids.filter(function(i){return state.checks[i];}).length;
+  var noAI=0,days=0;for(var i=0;i<7;i++){var s=ymd(addDays(weekStart(n),i));if(dayTotal(s)>0){days++;if(state.logs[s].noAI)noAI++;}}
+  document.getElementById("revSummary").innerHTML='<span class="mono"><b>'+fmtH(h)+'</b> / '+fmtH(t)+' jam ('+(t?Math.round(h/t*100):0)+'%) · '+done+'/'+ids.length+' tugas · '+days+' hari aktif · '+noAI+' hari tanpa AI · '+blockedDays(n)+' hari halangan</span><br><span class="muted" style="font-size:13px">Fase '+ph.id+' '+esc(ph.name)+' · '+MODES[w.mode].label+'</span>';
+}
+function render(){syncChecks();syncHours();}
+
+/* ---------- events ---------- */
+document.addEventListener("change",function(e){
+  var t=e.target;
+  if(t.matches&&t.matches("input[data-task]")){
+    if(t.checked)state.checks[t.dataset.task]=true;else delete state.checks[t.dataset.task];
+    syncChecks();syncReview();saveChecks();
+  }
+});
+function bump(track,delta){
+  var d=curLogDate(),l=Object.assign({odin:0,seo:0},state.logs[d]||{});
+  l[track]=Math.max(0,Math.min(16,(+l[track]||0)+delta));l.date=d;state.logs[d]=l;syncHours();saveLog(d,true);
+}
+document.getElementById("odinPlus").addEventListener("click",function(){bump("odin",0.5);});
+document.getElementById("odinMinus").addEventListener("click",function(){bump("odin",-0.5);});
+document.getElementById("seoPlus").addEventListener("click",function(){bump("seo",0.5);});
+document.getElementById("seoMinus").addEventListener("click",function(){bump("seo",-0.5);});
+document.getElementById("noAI").addEventListener("change",function(e){var d=curLogDate(),l=Object.assign({odin:0,seo:0},state.logs[d]||{});
+  l.noAI=e.target.checked;l.date=d;state.logs[d]=l;syncReview();saveLog(d,true);});
+document.getElementById("halangan").addEventListener("change",function(e){var d=curLogDate(),l=Object.assign({odin:0,seo:0},state.logs[d]||{});
+  if(e.target.value)l.halangan=e.target.value;else delete l.halangan;l.date=d;state.logs[d]=l;syncHours();saveLog(d,true);});
+document.getElementById("note").addEventListener("input",function(e){var d=curLogDate(),l=Object.assign({odin:0,seo:0},state.logs[d]||{});
+  l.note=e.target.value.slice(0,500);l.date=d;state.logs[d]=l;flash("savedMsg","Menyimpan…");saveLog(d,false);});
+document.getElementById("logDate").addEventListener("change",function(){var el=document.getElementById("note");el.blur();syncLogPanel();});
+document.getElementById("revWeek").addEventListener("change",syncReview);
+[["revWins","wins"],["revBlock","block"],["revNext","next"]].forEach(function(p){
+  document.getElementById(p[0]).addEventListener("input",function(e){var n=+document.getElementById("revWeek").value,k=revKey(n);
+    var r=Object.assign({},state.reviews[k]||{});r[p[1]]=e.target.value.slice(0,1500);r.week=n;state.reviews[k]=r;flash("revSaved","Menyimpan…");saveReview(k);});
+});
+// tabs
+var TABS=["today","roadmap","review","sources","rules"];
+function showTab(name,focus){TABS.forEach(function(t){var b=document.getElementById("tab-"+t),p=document.getElementById("p-"+t),on=t===name;
+  b.setAttribute("aria-selected",on?"true":"false");b.tabIndex=on?0:-1;p.hidden=!on;if(on&&focus)b.focus();});
+  try{localStorage.setItem(LS+"-tab",name);}catch(e){}}
+TABS.forEach(function(t,i){var b=document.getElementById("tab-"+t);b.addEventListener("click",function(){showTab(t);});
+  b.addEventListener("keydown",function(e){if(e.key==="ArrowRight"||e.key==="ArrowLeft"){e.preventDefault();var j=(i+(e.key==="ArrowRight"?1:TABS.length-1))%TABS.length;showTab(TABS[j],true);}});});
+
+/* ---------- backup ---------- */
+var URL_ = window.URL;
+var BK = LS+"-backup";
+function hasData(){return Object.keys(state.logs).length>0||Object.keys(state.checks).length>0;}
+function syncBackupNag(){
+  var el=document.getElementById("backupNag"),last=+(lsGet(BK)||0),st=document.getElementById("store");
+  if(last){var ld=new Date(last);st.textContent="tersimpan di browser ini · cadangan terakhir "+ld.getDate()+" "+MONTHS[ld.getMonth()];}
+  else st.textContent="tersimpan di browser ini · belum ada cadangan";
+  var stale=hasData()&&(!last||Date.now()-last>7*DAY);
+  if(!stale){el.hidden=true;return;}
+  el.hidden=false;
+  el.innerHTML=(last?"Cadangan terakhir lebih dari 7 hari lalu.":"Belum pernah unduh cadangan.")+' Data cuma ada di browser ini. <button type="button" class="linkbtn" id="nagGo">Unduh cadangan</button>';
+  document.getElementById("nagGo").addEventListener("click",function(){showTab("review");document.getElementById("backupCard").scrollIntoView({behavior:"smooth",block:"start"});});
+}
+document.getElementById("exportBtn").addEventListener("click",function(){
+  var data={app:"logbook-pkl",version:1,exportedAt:new Date().toISOString(),checks:state.checks,logs:state.logs,reviews:state.reviews};
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  var url=URL_.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="cadangan-logbook-"+ymd(new Date())+".json";document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL_.revokeObjectURL(url);},4000);
+  lsSet(BK,String(Date.now()));flash("backupMsg","Cadangan diunduh "+nowTime()+". Simpan di Google Drive atau flashdisk.");syncBackupNag();
+});
+var pendingImport=null;
+document.getElementById("importFile").addEventListener("change",function(e){
+  var f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    var d;try{d=JSON.parse(rd.result);}catch(err){flash("backupMsg","File ini bukan cadangan logbook (JSON rusak).");return;}
+    if(!d||d.app!=="logbook-pkl"||typeof d.logs!=="object"){flash("backupMsg","File ini bukan cadangan logbook.");return;}
+    pendingImport=d;
+    var box=document.getElementById("importConfirm");box.hidden=false;
+    box.innerHTML='File berisi <b class="mono">'+Object.keys(d.logs||{}).length+'</b> hari log, <b class="mono">'+Object.keys(d.checks||{}).length+'</b> centang, <b class="mono">'+Object.keys(d.reviews||{}).length+'</b> review. Gabungkan dengan data sekarang? Hari yang ada di keduanya pakai jam yang lebih banyak.'+
+      '<div class="btnrow"><button type="button" class="btn primary" id="impYes">Gabungkan</button><button type="button" class="btn" id="impNo">Batal</button></div>';
+    document.getElementById("impYes").addEventListener("click",doImport);
+    document.getElementById("impNo").addEventListener("click",function(){pendingImport=null;box.hidden=true;});
+  };
+  rd.onerror=function(){flash("backupMsg","File tidak bisa dibaca.");};
+  rd.readAsText(f);
+});
+function doImport(){
+  var d=pendingImport;if(!d)return;pendingImport=null;
+  Object.keys(d.checks||{}).forEach(function(k){if(d.checks[k])state.checks[k]=true;});
+  Object.keys(d.logs||{}).forEach(function(k){if(!/^\d{4}-\d{2}-\d{2}$/.test(k))return;var inc=d.logs[k]||{},cur=state.logs[k];
+    var tot=function(l){return (+l.odin||0)+(+l.seo||0);};
+    if(!cur||tot(inc)>=tot(cur)){var m=Object.assign({},cur||{},inc);if(cur&&cur.note&&!inc.note)m.note=cur.note;state.logs[k]=m;}});
+  Object.keys(d.reviews||{}).forEach(function(k){if(!state.reviews[k])state.reviews[k]=d.reviews[k];});
+  lsSave();document.getElementById("importConfirm").hidden=true;render();syncBackupNag();
+  flash("backupMsg",storageOK?"Data digabungkan "+nowTime()+".":"Gagal menyimpan hasil gabungan.");
+}
+
+/* ---------- focus timer ---------- */
+var FAST = /[?&]cepat\b/.test(location.search);
+var MIN_MS = FAST?1000:60000, FOCUS_MS = 50*MIN_MS, BREAK_MS = 5*MIN_MS;
+if(FAST){FOCUS_MS=6000;BREAK_MS=3000;}
+var TK = LS+"-timer", BASE_TITLE = document.title;
+var T = null, mainRoot = null, floatRoot = null, pipWin = null, tickMain = null, actx = null;
+var HAS_PIP = "documentPictureInPicture" in window, COARSE = window.matchMedia && matchMedia("(pointer: coarse)").matches;
+function loadTimer(){var r=lsGet(TK);if(!r)return;try{var t=JSON.parse(r);if(t&&t.phase&&t.track)T=t;}catch(e){}}
+function saveTimer(){if(T)lsSet(TK,JSON.stringify(T));else lsDel(TK);}
+function timerHTML(){
+  return '<div class="tv" data-tv>'+
+    '<div class="tv-top"><span class="daytag t-odin" data-r="track">Odin</span><span class="tv-phase" data-r="phase">Fokus</span></div>'+
+    '<div class="tv-time" data-r="time" aria-live="off">50:00</div>'+
+    '<div class="tv-bar"><i data-r="bar"></i></div>'+
+    '<div class="tv-sub" data-r="sub"></div>'+
+    '<div class="tv-btns">'+
+      '<button type="button" class="btn" data-act="pause">Jeda</button>'+
+      '<button type="button" class="btn" data-act="resume" hidden>Lanjut fokus</button>'+
+      '<button type="button" class="btn" data-act="skip" hidden>Lewati istirahat</button>'+
+      '<button type="button" class="btn primary" data-act="finish">Selesai &amp; catat</button>'+
+    '</div>'+
+    '<div class="tv-more" data-only="main"><button type="button" class="linkbtn" data-act="pip">Buka timer melayang</button><button type="button" class="linkbtn" data-act="discard">Batalkan tanpa catat</button></div>'+
+  '</div>';
+}
+function fmtClock(ms){ms=Math.max(0,ms);var s=Math.ceil(ms/1000),m=Math.floor(s/60);return String(m).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+function fmtDur(ms){var m=Math.floor(Math.max(0,ms)/MIN_MS);return Math.floor(m/60)+"j "+String(m%60).padStart(2,"0")+"m";}
+function focusNow(now){return T.focusAcc+(T.phase==="focus"?now-T.since:0);}
+function blockNow(now){return T.blockAcc+(T.phase==="focus"?now-T.since:0);}
+function advance(now){
+  if(!T)return null;var ev=null;
+  if(T.phase==="focus"&&T.blockAcc+(now-T.since)>=FOCUS_MS){var used=FOCUS_MS-T.blockAcc;T.focusAcc+=used;T.blockAcc=0;T.phase="break";T.since+=used;ev="break";}
+  if(T.phase==="break"&&now-T.since>=BREAK_MS){T.phase="breakover";T.since+=BREAK_MS;ev="breakover";}
+  if(ev)saveTimer();
+  return ev;
+}
+function beep(times){
+  if(!actx)return;try{if(actx.state==="suspended")actx.resume();
+    for(var i=0;i<times;i++){var o=actx.createOscillator(),g=actx.createGain(),t0=actx.currentTime+i*0.35;
+      o.type="sine";o.frequency.value=880;g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(0.25,t0+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t0+0.25);
+      o.connect(g);g.connect(actx.destination);o.start(t0);o.stop(t0+0.3);}}catch(e){}
+}
+function notify(title,body){
+  try{if("Notification" in window&&Notification.permission==="granted"){var n=new Notification(title,{body:body,tag:"logbook-timer",renotify:true});n.onclick=function(){window.focus();n.close();};}}catch(e){}
+}
+function alertPhase(ev){
+  if(ev==="break"){beep(3);notify("Istirahat 5 menit","Blok fokus selesai. Berdiri, minum air, jauhi layar.");}
+  if(ev==="breakover"){beep(2);notify("Istirahat selesai","Buka timer dan klik Lanjut fokus.");}
+  [mainRoot,floatRoot].forEach(function(r){if(!r)return;r.classList.remove("ring");void r.offsetWidth;r.classList.add("ring");setTimeout(function(){r.classList.remove("ring");},3200);});
+}
+function ensureAudio(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume();}catch(e){}}
+function q(r,n){return r.querySelector('[data-r="'+n+'"]');}
+function b(r,a){return r.querySelector('[data-act="'+a+'"]');}
+function renderTimer(now){
+  var live=!!T;
+  document.getElementById("sesiStart").hidden=live;
+  document.getElementById("sesiLive").hidden=!live;
+  document.getElementById("sesiCard").classList.toggle("live",live);
+  if(!live){document.title=BASE_TITLE;return;}
+  var ph=T.phase,time,label,frac;
+  if(ph==="focus"||ph==="paused"){var bl=blockNow(now);time=fmtClock(FOCUS_MS-bl);frac=bl/FOCUS_MS;label=(ph==="paused"?"Dijeda":"Fokus")+" · blok "+T.block;}
+  else if(ph==="break"){var e=now-T.since;time=fmtClock(BREAK_MS-e);frac=e/BREAK_MS;label="Istirahat";}
+  else{time="+"+fmtClock(now-T.since);frac=1;label="Istirahat selesai";}
+  var f=focusNow(now),logged=(+((state.logs[T.date]||{})[T.track])||0)*60*MIN_MS;
+  var sub="Sesi ini "+fmtDur(f)+" · hari ini "+fmtDur(logged+f)+" "+(T.track==="odin"?"Odin":"SEO");
+  var trackName=T.track==="odin"?"Odin":"SEO";
+  [mainRoot,floatRoot].forEach(function(r){
+    if(!r)return;
+    r.classList.toggle("seo",T.track==="seo");r.classList.toggle("brk",ph==="break");r.classList.toggle("paused",ph==="paused");r.classList.toggle("over",ph==="breakover");
+    var tr=q(r,"track");tr.className="daytag "+(T.track==="odin"?"t-odin":"t-seo");tr.textContent=trackName;
+    q(r,"phase").textContent=label;q(r,"time").textContent=time;q(r,"sub").textContent=sub;q(r,"bar").style.width=Math.min(100,Math.max(0,frac*100))+"%";
+    b(r,"pause").hidden=ph!=="focus";b(r,"resume").hidden=!(ph==="paused"||ph==="breakover");b(r,"skip").hidden=ph!=="break";
+  });
+  var pipBtn=b(mainRoot,"pip");pipBtn.hidden=!!floatRoot||(COARSE&&!HAS_PIP);
+  document.title=time+" · "+label+" · "+trackName;
+  if(pipWin&&!pipWin.closed){try{pipWin.document.title=time+" · "+trackName;}catch(e){}}
+}
+function tick(){
+  if(pipWin&&pipWin.closed){pipWin=null;floatRoot=null;}
+  var now=Date.now(),ev=advance(now);if(ev)alertPhase(ev);renderTimer(now);
+}
+function startTicking(){if(!tickMain)tickMain=setInterval(tick,1000);tick();}
+function stopTicking(){clearInterval(tickMain);tickMain=null;}
+function closeFloat(){if(pipWin&&!pipWin.closed){try{pipWin.close();}catch(e){}}pipWin=null;floatRoot=null;}
+function setupFloat(w,kind){
+  pipWin=w;var d=w.document;
+  if(kind==="popup"){d.open();d.write('<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Timer</title></head><body></body></html>');d.close();}
+  document.querySelectorAll('link[rel="stylesheet"],style').forEach(function(n){d.head.appendChild(n.cloneNode(true));});
+  var th=document.documentElement.getAttribute("data-theme");if(th)d.documentElement.setAttribute("data-theme",th);
+  d.body.className="float";d.body.innerHTML=timerHTML();
+  floatRoot=d.body.querySelector("[data-tv]");floatRoot.classList.add("in-float");
+  floatRoot.addEventListener("click",onTimerClick);
+  w.setInterval(tick,1000);
+  w.addEventListener("pagehide",function(){if(pipWin===w){pipWin=null;floatRoot=null;if(T)renderTimer(Date.now());}});
+  tick();
+}
+function openFloat(){
+  if(!T)return;
+  if(pipWin&&!pipWin.closed){try{pipWin.focus();}catch(e){}return;}
+  if(HAS_PIP){
+    window.documentPictureInPicture.requestWindow({width:330,height:250}).then(function(w){setupFloat(w,"pip");},function(){openPopup();});
+    return;
+  }
+  if(COARSE){flash("sesiMsg","Timer melayang tidak tersedia di HP. Timer tetap jalan di halaman ini.");return;}
+  openPopup();
+}
+function openPopup(){
+  var w=null;try{w=window.open("","logbook-timer","popup=yes,width=340,height=270");}catch(e){}
+  if(!w){flash("sesiMsg","Browser memblokir jendela timer. Izinkan pop-up untuk situs ini, lalu klik Buka timer melayang.");return;}
+  setupFloat(w,"popup");
+}
+function finishSession(){
+  var now=Date.now();advance(now);
+  if(T.phase==="focus"){var run=now-T.since;T.focusAcc+=run;T.blockAcc+=run;T.phase="paused";}
+  var mins=Math.round(T.focusAcc/MIN_MS),date=T.date,track=T.track,name=track==="odin"?"Odin":"SEO";
+  T=null;saveTimer();closeFloat();stopTicking();renderTimer(now);
+  if(mins<1){flash("sesiMsg","Sesi kurang dari 1 menit, tidak dicatat.");return;}
+  var l=Object.assign({odin:0,seo:0},state.logs[date]||{});
+  l[track]=Math.round(((+l[track]||0)+mins/60)*100)/100;l.date=date;state.logs[date]=l;
+  lsSave();
+  document.getElementById("logDate").value=date;syncHours();syncReview();
+  flash("sesiMsg","Tercatat "+Math.floor(mins/60)+"j "+String(mins%60).padStart(2,"0")+"m ke "+name+". Tulis 'besok mulai dari' di kartu Catat jam.");
+  try{window.focus();}catch(e){}
+  var note=document.getElementById("note");note.scrollIntoView({behavior:"smooth",block:"center"});
+}
+var discardArmed=null;
+function onTimerClick(e){
+  var el=e.target.closest&&e.target.closest("[data-act]");if(!el||!T)return;
+  var act=el.getAttribute("data-act"),now=Date.now();ensureAudio();advance(now);
+  if(act==="pause"&&T.phase==="focus"){var run=now-T.since;T.focusAcc+=run;T.blockAcc+=run;T.phase="paused";T.since=now;}
+  else if(act==="resume"&&(T.phase==="paused"||T.phase==="breakover")){if(T.phase==="breakover")T.block++;T.phase="focus";T.since=now;}
+  else if(act==="skip"&&T.phase==="break"){T.block++;T.phase="focus";T.since=now;}
+  else if(act==="finish"){finishSession();return;}
+  else if(act==="pip"){openFloat();return;}
+  else if(act==="discard"){
+    if(discardArmed){clearTimeout(discardArmed);discardArmed=null;T=null;saveTimer();closeFloat();stopTicking();renderTimer(now);flash("sesiMsg","Sesi dibatalkan, tidak ada yang dicatat.");return;}
+    el.textContent="Klik lagi untuk membatalkan";discardArmed=setTimeout(function(){discardArmed=null;el.textContent="Batalkan tanpa catat";},4000);return;
+  }
+  saveTimer();renderTimer(now);
+}
+function syncStartBtn(){var seo=document.getElementById("trkSeo").checked;var sb=document.getElementById("startBtn");sb.classList.toggle("seo",seo);sb.textContent=seo?"Mulai SEO":"Mulai Odin";}
+document.getElementById("trkOdin").addEventListener("change",syncStartBtn);
+document.getElementById("trkSeo").addEventListener("change",syncStartBtn);
+document.getElementById("startBtn").addEventListener("click",function(){
+  if(T)return;
+  var track=document.getElementById("trkSeo").checked?"seo":"odin",now=Date.now();
+  ensureAudio();
+  try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();}catch(e){}
+  T={track:track,date:ymd(new Date()),phase:"focus",focusAcc:0,blockAcc:0,since:now,block:1};
+  saveTimer();flash("sesiMsg","");
+  startTicking();openFloat();
+});
+window.addEventListener("storage",function(e){
+  if(e.key===LS){lsLoad();render();}
+  if(e.key===TK){T=null;loadTimer();if(T)startTicking();else{stopTicking();closeFloat();renderTimer(Date.now());}}
+});
+window.addEventListener("pagehide",function(){if(persistT){clearTimeout(persistT);persistT=null;lsSave();}});
+
+/* ---------- boot ---------- */
+lsLoad();
+document.getElementById("logDate").value=ymd(NOW);
+document.getElementById("logDate").max=ymd(NOW);
+var days=dayDiff(PKL,NOW);
+document.getElementById("countdown").innerHTML = days>0?'<span class="hl mono">'+days+' hari</span> lagi ke PKL (perkiraan 1 Mar 2027)':'<span class="hl">PKL sudah dimulai</span>';
+var ph=phaseOfWeek(Math.min(Math.max(WNOW,1),20));
+document.getElementById("weeknow").innerHTML = WNOW<=20?'Minggu <b class="mono">'+Math.max(WNOW,1)+'</b> / 20 · Fase '+ph.id+' <b>'+ph.name+'</b>':'Roadmap selesai';
+buildToday();buildRoadmap();buildChart();buildSources();buildReviewSelect();render();
+var initTab=(location.hash||"").replace("#","");
+if(TABS.indexOf(initTab)<0){try{initTab=localStorage.getItem(LS+"-tab")||"today";}catch(e){initTab="today";}}
+showTab(TABS.indexOf(initTab)>=0?initTab:"today");
+
+syncBackupNag();
+// session card
+document.getElementById("sesiLive").innerHTML=timerHTML();
+mainRoot=document.getElementById("sesiLive").querySelector("[data-tv]");
+mainRoot.addEventListener("click",onTimerClick);
+var wdNow=NOW.getDay();
+document.getElementById(wdNow===5||wdNow===6?"trkSeo":"trkOdin").checked=true;
+syncStartBtn();
+document.getElementById("pipNote").textContent = HAS_PIP
+  ? "Timer muncul di jendela kecil yang selalu di atas tab dan aplikasi lain. Izinkan notifikasi supaya ada pengingat istirahat."
+  : (COARSE ? "Di HP timer jalan di halaman ini saja. Jendela melayang hanya tersedia di Chrome atau Edge desktop."
+            : "Browser ini belum mendukung jendela yang selalu di atas, jadi timer dibuka di jendela kecil terpisah. Pakai Chrome atau Edge untuk versi melayang.");
+loadTimer();
+if(T){startTicking();flash("sesiMsg","Sesi masih berjalan dari tadi. Klik Buka timer melayang untuk memunculkan jendelanya lagi.");}
+else renderTimer(Date.now());
+document.addEventListener("pointerdown",function once(){ensureAudio();document.removeEventListener("pointerdown",once);});
+})();
+</script>
+</body>
+</html>
